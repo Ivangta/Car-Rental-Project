@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace Car_Model
 {
@@ -34,7 +35,7 @@ namespace Car_Model
         public EngineSpec EngineSpec { get; set; }
         public ICollection<Extras> Extras { get; set; }
 
-        private static List<Car> listOfCars = new List<Car>();
+        //private static List<Car> listOfCars = new List<Car>();
       
         public string Name
         {
@@ -43,14 +44,51 @@ namespace Car_Model
         }
         public List<Car> Cars
         {
-            get { return listOfCars; }
-            set { listOfCars = value; }
+            get { return cars; }
+            set { cars = value; }
         }
 
         public string AddCar(Car car)
         {
-            listOfCars.Add(car);
+            cars.Add(car);
             return "Car added.";
+        }
+
+        public string SearchCar(Guid Id)
+        {
+            bool isCarFound = false;
+
+            foreach (Car car in cars)
+            {
+                if (car.Id.Equals(Id))
+                {
+                    isCarFound = true;
+                }
+            }
+            if (isCarFound)
+            {
+                return "Car found.";
+            }
+            else
+            {
+                return "Car not found.";
+            }
+        }
+
+        public string ModifyCar()
+        {
+            Console.Write("Enter Id code: ");
+            Guid IdCode = Guid.Parse(Console.ReadLine());
+            var result = cars.Where(x => x.Id == IdCode).SingleOrDefault();
+
+            if (result == null)
+            {
+                throw new ArgumentNullException("There is no such Id in the system!");
+            }
+            else
+            {
+                Console.Write("Enter parameter to modify ")
+            }
         }
 
     }

@@ -6,7 +6,8 @@ namespace Car_Model
     {
         static void Main(string[] args)
         {
-            
+            var navService = new NavigationService();
+            navService.StartProgram();
         }
     }
 }
