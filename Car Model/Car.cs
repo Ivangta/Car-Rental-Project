@@ -5,14 +5,14 @@ using System.Linq;
 
 namespace Car_Model
 {
-    public class Car
+    public class Car : BrandInfo
     {
         private string name;
         private List<Car> cars;
         private List<Car> reservedCars;
 
-
-        public Car(Guid id, CarType carType, int seats, DoorsEnum doorsEnum, GearBoxEnum gearboxEnum, EngineSpec engineSpec, ICollection<Extras> extras )
+        public Car(Guid id, CarType carType, int seats, DoorsEnum doorsEnum, GearBoxEnum gearboxEnum, EngineSpec engineSpec, ICollection<Extras> extras, DateTime startDate, string clientRequestInfo, Car carToBook, RentalInfo rentalInformation, string brand, string model)
+            : base(brand, model)
         {
             this.Id = id;
             this.CarType = carType;
@@ -23,7 +23,8 @@ namespace Car_Model
             this.Extras = new List<Extras>(extras);
         }
 
-        public Car(string name)
+        public Car(string name, DateTime startDate, string clientRequestInfo, Car carToBook, RentalInfo rentalInformation, string brand, string model)
+            : base(brand, model)
         {
             this.name = Name;
             this.cars = new List<Car>();
@@ -56,6 +57,26 @@ namespace Car_Model
             return "Car added.";
         }
 
+        public string RemoveCar(Car car)
+        {
+            cars.Remove(car);
+            return "Car has been removed.";
+        }
+
+        public string RemoveAllCars(Guid id)
+        {
+            int numberOfCarsBeforeRemoval = cars.Count;
+            cars.RemoveAll(x => x.Id == id);
+            return "Cars Removed";
+        }
+        
+        public string RemoveAllCarsByBrand(string brand)
+        {
+            int numberOfCarsBeforeRemoval = cars.Count;
+            cars.RemoveAll(x => x.Brand == brand);
+            return "Cars Removed";
+        }
+
         public string SearchCar(Guid Id)
         {
             bool isCarFound = false;
@@ -77,7 +98,7 @@ namespace Car_Model
             }
         }
 
-        public string ReserveCar(Car reserveCar)
+        public string ReserveCar(Car reservedCar)
         {
             Console.Write("Enter Id code of car: ");
 
@@ -101,6 +122,32 @@ namespace Car_Model
             }
 
             return "Reservation process has ended.";
+        }
+
+        public string CancelReservation(Car reservedCar)
+        {
+            Console.Write("Enter Id code of car: ");
+
+            Guid IdCode = Guid.Parse(Console.ReadLine());
+            var result = cars.Where(x => x.Id == IdCode).SingleOrDefault();
+
+            if (result == null)
+            {
+                throw new ArgumentNullException("There is no such Id of car in the system!");
+            }
+
+            var reservedResult = reservedCars.Where(x => x.Id == IdCode).SingleOrDefault();
+
+            if (reservedResult == null)
+            {
+                throw new ArgumentNullException($"The car with id {Id} is not the reservation list.");
+            }
+            else
+            {
+                reservedCars.Remove(reservedCar);
+            }
+
+            return "Car has been removed from the reservation list.";
         }
 
         public string ModifyCar()
@@ -167,9 +214,6 @@ namespace Car_Model
             }
             return "Car has been modified.";
         }
-
-
-          
             
     }
 }

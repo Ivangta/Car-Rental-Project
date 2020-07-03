@@ -18,12 +18,6 @@ namespace Car_Model
             
             while (line != "End")
             {
-                //string[] separators = { ",", " " };
-                //string[] expectedComand = line.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-                //for (int i = 0; i < expectedComand.Length; i++)
-                //{
-                //    expectedComand[i] = expectedComand[i].Trim();
-                //}
                 ExecuteCommand(line, car);
                 line = Console.ReadLine();
                 
@@ -40,6 +34,12 @@ namespace Car_Model
                     {
                         cars.AddCar(new Car(Guid.Parse(command[0]), (CarType)Enum.Parse(typeof(CarType), (command[1])), int.Parse(command[2]), (DoorsEnum)Enum.Parse(typeof(DoorsEnum), (command[3])),
                             (GearBoxEnum)Enum.Parse(typeof(GearBoxEnum), (command[4])), currentEngineSpec, currentExtras));
+                    }
+                    break;
+                case "RemoveCar":
+                    {
+                        cars.RemoveCar(new Car(Guid.Parse(command[0]), (CarType)Enum.Parse(typeof(CarType), (command[1])), int.Parse(command[2]), (DoorsEnum)Enum.Parse(typeof(DoorsEnum), (command[3])),
+                            (GearBoxEnum)Enum.Parse(typeof(GearBoxEnum), (command[4])), currentEngineSpec, currentExtras));))
                     }
                     break;
                 
