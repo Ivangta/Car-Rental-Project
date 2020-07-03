@@ -9,6 +9,8 @@ namespace Car_Model
     {
         private string name;
         private List<Car> cars;
+        private List<Car> reservedCars;
+
 
         public Car(Guid id, CarType carType, int seats, DoorsEnum doorsEnum, GearBoxEnum gearboxEnum, EngineSpec engineSpec, ICollection<Extras> extras )
         {
@@ -47,7 +49,7 @@ namespace Car_Model
             get { return cars; }
             set { cars = value; }
         }
-
+        
         public string AddCar(Car car)
         {
             cars.Add(car);
@@ -75,6 +77,32 @@ namespace Car_Model
             }
         }
 
+        public string ReserveCar(Car reserveCar)
+        {
+            Console.Write("Enter Id code of car: ");
+
+            Guid IdCode = Guid.Parse(Console.ReadLine());
+            var result = cars.Where(x => x.Id == IdCode).SingleOrDefault();
+
+            if (result == null)
+            {
+                throw new ArgumentNullException("There is no such Id of car in the system!");
+            }
+
+            var reservedResult = reservedCars.Where(x => x.Id == IdCode).SingleOrDefault();
+
+            if (reservedResult == null)
+            {
+                reservedCars.Add(reservedCar);
+            }
+            else
+            {
+                throw new ArgumentException("Car has already been reserved.");
+            }
+
+            return "Reservation process has ended.";
+        }
+
         public string ModifyCar()
         {
             Console.Write("Enter Id code: ");
@@ -83,13 +111,65 @@ namespace Car_Model
 
             if (result == null)
             {
-                throw new ArgumentNullException("There is no such Id in the system!");
+                throw new ArgumentNullException("There is no such Id of car in the system!");
             }
             else
             {
-                Console.Write("Enter parameter to modify ")
+                Console.Write("Enter parameter to modify: ");
+
+                string parameterToModify = Console.ReadLine();
+
+                switch (parameterToModify)
+                {
+                    case "Id":
+                        {
+                            throw new ArgumentException("Id cannot be modified");
+                        }
+                    case "CarType":
+                        {
+                            Console.Write("Enter car type: ");
+                            CarType carType = (CarType)Enum.Parse(typeof(CarType), Console.ReadLine());
+
+                            result.CarType = carType;
+
+                        }
+                        break;
+                    case "Seats":
+                        {
+                            Console.Write("Enter number of seats: ");
+                            var seats = int.Parse(Console.ReadLine());
+
+                            result.Seats = seats;
+                        }
+                        break;
+                    case "Doors":
+                        {
+                            Console.Write("Enter number of doors: ");
+                            var doors = (DoorsEnum)Enum.Parse(typeof(DoorsEnum), Console.ReadLine());
+
+                            result.Doors = doors;
+                        }
+                        break;
+                    case "Gear":
+                        {
+                            Console.Write("Enter number of doors: ");
+                            var gear = (GearBoxEnum)Enum.Parse(typeof(GearBoxEnum), Console.ReadLine());
+
+                            result.GearBoxType = gear;
+                        }
+                        break;
+                    default:
+                        {
+                            throw new ArgumentException($"Parameter {parameterToModify} has not been recognized.");
+
+                        }
+                }
             }
+            return "Car has been modified.";
         }
 
+
+          
+            
     }
 }

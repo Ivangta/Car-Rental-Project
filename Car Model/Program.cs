@@ -8,6 +8,7 @@ namespace Car_Model
         {
             var navService = new NavigationService();
             navService.StartProgram();
+
         }
     }
 }
