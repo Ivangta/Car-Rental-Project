@@ -5,41 +5,51 @@ using System.Linq;
 
 namespace Car_Model
 {
-    public class Car : BrandInfo
+    public class Car 
     {
         private string name;
         private List<Car> cars;
         private List<Car> reservedCars;
 
-        public Car(Guid id, CarType carType, int seats, DoorsEnum doorsEnum, GearBoxEnum gearboxEnum, EngineSpec engineSpec, ICollection<Extras> extras, DateTime startDate, string clientRequestInfo, Car carToBook, RentalInfo rentalInformation, string brand, string model)
-            : base(brand, model)
+        public Car()
         {
             this.Id = id;
             this.CarType = carType;
             this.Seats = seats;
-            this.Doors = doorsEnum;
             this.GearBoxType = gearboxEnum;
             this.EngineSpec = engineSpec;
             this.Extras = new List<Extras>(extras);
         }
 
-        public Car(string name, DateTime startDate, string clientRequestInfo, Car carToBook, RentalInfo rentalInformation, string brand, string model)
-            : base(brand, model)
+        public Car(string name)
+            
         {
             this.name = Name;
             this.cars = new List<Car>();
+        }
+        public void SetDoors(DoorsEnum doors)
+        {
+            this.Doors = doors;
+        }
+
+        public void SetBrand(string brand, string model)
+        {
+            this.Brand = brand;
+            this.Model = model;
         }
 
         public Guid Id { get; set; }
         public CarType CarType { get; set; }
         public int Seats { get; set; }
+        public string Brand { get; set;  }
+        public string Model { get; set }
         public DoorsEnum Doors { get; set; }
         public GearBoxEnum GearBoxType { get; set; }
         public EngineSpec EngineSpec { get; set; }
         public ICollection<Extras> Extras { get; set; }
 
         //private static List<Car> listOfCars = new List<Car>();
-      
+
         public string Name
         {
             get { return name; }
@@ -50,30 +60,10 @@ namespace Car_Model
             get { return cars; }
             set { cars = value; }
         }
-        
-        public string AddCar(Car car)
-        {
-            cars.Add(car);
-            return "Car added.";
-        }
-
-        public string RemoveCar(Car car)
-        {
-            cars.Remove(car);
-            return "Car has been removed.";
-        }
-
         public string RemoveAllCars(Guid id)
         {
             int numberOfCarsBeforeRemoval = cars.Count;
             cars.RemoveAll(x => x.Id == id);
-            return "Cars Removed";
-        }
-        
-        public string RemoveAllCarsByBrand(string brand)
-        {
-            int numberOfCarsBeforeRemoval = cars.Count;
-            cars.RemoveAll(x => x.Brand == brand);
             return "Cars Removed";
         }
 
