@@ -22,26 +22,25 @@ namespace Car_Model
             while (line != "End")
             {
                 ExecuteCommand(line, car);
-                line = Console.ReadLine();
                 
                 Console.WriteLine("------------------------------------------------");
+                line = Console.ReadLine();
             }
         }
 
         public void ExecuteCommand(string line, Car cars)
         {
-            string[] command = new string[20];
-            command = line.Split(" ");
+            var command = line.Split(" ");
             switch (command[0])
             {
                 case "AddCar":
                     {
-                        AddCar(command);
+                        AddCar();
                     }
                     break;
                 case "RemoveCar":
                     {
-                        RemoveCar(Guid.Parse(command[1]));
+                        Console.WriteLine(RemoveCar());
                     }
                     break;
                 case "ModifyCar":
@@ -51,100 +50,125 @@ namespace Car_Model
                     break;
                 case "SearchCar":
                     {
-                        SearchCar(Guid.Parse(command[1]));
+                        Console.WriteLine(SearchCar());
                     }
                     break;
                 case "RemoveAllCars":
                     {
-                        Console.WriteLine("Enter brand to remove: ");
-                        RemoveAllCars(command[1]);
+                        
+                        Console.WriteLine(RemoveAllCars());
                     }
                     break;
                 case "ReserveCar":
                     {
-                        Console.WriteLine("Enter Id code of car to reserve: ");
-                        ReserveCar(Guid.Parse(command[1]));
+                        Console.WriteLine(ReserveCar());
                     }
                     break;
                 case "CancelReservation":
                     {
-                        Console.WriteLine("Enter Id code of car to cancel reservation: ");
-                        CancelReservation(Guid.Parse(command[1]));
+                        Console.WriteLine(CancelReservation());
+                    }
+                    break;
+                case "ListAllCars":
+                    {
+                        ListAllCars();
+                    }
+                    break;
+                case "ListAllReservations":
+                    {
+                        ListAllReservations();
                     }
                     break;
             }
            
         }
 
-        private void AddCar(string[] command)
+        private void AddCar()
         {
             var k = new Car();
+            string[] command = new string[8];
+
             Console.WriteLine("Enter Car ID: ");
-            var commandId = Guid.Parse(command[1]);
-            commandId = Guid.Parse(Console.ReadLine());
+            command[0] = Console.ReadLine();
+            var commandId = Guid.Parse(command[0]);
             k.SetId(commandId);
 
             Console.WriteLine("Enter car type: ");
-            var commandCarType = (CarType)Enum.Parse(typeof(CarType), (command[2]));
-            commandCarType = (CarType)Enum.Parse(typeof(CarType), Console.ReadLine());
-            k.SetCarType(commandCarType);
+            command[1] = Console.ReadLine();
+            var commandCarType = (CarType)Enum.Parse(typeof(CarType), (command[1]));
+            k.SetCarType(commandCarType); 
 
             Console.WriteLine("Enter number of seats: ");
-            var commandSeats = int.Parse(command[3]);
-            commandSeats = int.Parse(Console.ReadLine());
+            command[2] = Console.ReadLine();
+            var commandSeats = int.Parse(command[2]);
             k.SetSeats(commandSeats);
 
             Console.WriteLine("Enter brand: ");
-            var commandBrand = command[4];
-            Console.WriteLine("Enter model: ");
+            var commandBrand = command[3];
             commandBrand = Console.ReadLine();
-            var commandModel = command[5];
+            Console.WriteLine("Enter model: ");
+            var commandModel = command[4];
             commandModel = Console.ReadLine();
             k.SetBrand(commandBrand, commandModel);
 
             Console.WriteLine("Enter number of doors: ");
-            var commandDoors = (DoorsEnum)Enum.Parse(typeof(DoorsEnum), (command[6]));
-            commandDoors = (DoorsEnum)Enum.Parse(typeof(DoorsEnum), Console.ReadLine());
+            command[5] = Console.ReadLine();
+            var commandDoors = (DoorsEnum)Enum.Parse(typeof(DoorsEnum), (command[5]));
             k.SetDoors(commandDoors);
 
             Console.WriteLine("Enter gearbox type: ");
-            var commandGearBox = (GearBoxEnum)Enum.Parse(typeof(GearBoxEnum), (command[7]));
-            commandGearBox = (GearBoxEnum)Enum.Parse(typeof(GearBoxEnum), Console.ReadLine());
+            command[6] = Console.ReadLine();
+            var commandGearBox = (GearBoxEnum)Enum.Parse(typeof(GearBoxEnum), (command[6]));
             k.SetGearBoxType(commandGearBox);
 
             Console.WriteLine("Enter Car Engine capacity, horsepower and fuel type: ");
             string enter = Console.ReadLine();
             var engineCommand = enter.Split(" ");
             var capacity = float.Parse(engineCommand[0]);
-            capacity = float.Parse(Console.ReadLine());
             var horsePower = int.Parse(engineCommand[1]);
-            horsePower = int.Parse(Console.ReadLine());
-            horsePower = int.Parse(Console.ReadLine());
             var fuelType = (FuelTypeEnum)Enum.Parse(typeof(FuelTypeEnum), (engineCommand[2]));
-            fuelType = (FuelTypeEnum)Enum.Parse(typeof(FuelTypeEnum), Console.ReadLine());
             k.SetEngineSpec(capacity, horsePower, fuelType);
 
             Console.WriteLine("Enter extras: ");
-            var commandExtras = (Extras)Enum.Parse(typeof(Extras), (command[8]));
-            commandExtras = (Extras)Enum.Parse(typeof(Extras), Console.ReadLine());
+            command[7] = Console.ReadLine();
+            var commandExtras = (Extras)Enum.Parse(typeof(Extras), (command[7]));
             k.SetExtras(commandExtras);
 
             allCars.Add(k);
         }
 
-        public string RemoveCar(Guid Id)
+        public string RemoveCar()
         {
             Car toDelete = null;
-            foreach (var car in allCars)
+            Console.WriteLine("Enter Id code of car to remove: ");
+            Guid Id = Guid.Parse(Console.ReadLine());
+            if (allCars.Count != 0)
             {
-                if (car.Id == Id) toDelete = car;
+                foreach (var car in allCars)
+                {
+                    if (car.Id == Id)
+                    {
+                        toDelete = car;
+                    }
+                    else
+                    {
+                        Console.WriteLine("No such car present");
+                    }
+                }
+                allCars.Remove(toDelete);
+                return "Car " + Id + " has been removed.";
             }
-            allCars.Remove(toDelete);
-            return "Car " + Id + " has been removed.";
+            else
+            {
+                return "No cars present in list!";
+            }
+           
         }
 
-        public string RemoveAllCars(string brand)
+        public string RemoveAllCars()
         {
+             Console.WriteLine("Enter brand to remove: ");
+             string brand = Console.ReadLine();
              allCars.RemoveAll(x => x.Brand == brand);
              return "Cars Removed from brand " + brand;
         }
@@ -212,8 +236,10 @@ namespace Car_Model
             return "Car has been modified.";
         }
 
-        public string SearchCar(Guid Id)
+        public string SearchCar()
         {
+            Console.WriteLine("Enter car Id to be searched: ");
+            Guid Id = Guid.Parse(Console.ReadLine());
             bool isCarFound = false;
 
             foreach (Car car in allCars)
@@ -225,7 +251,7 @@ namespace Car_Model
             }
             if (isCarFound)
             {
-                return "Car found.";
+                return "Car found and present in list.";
             }
             else
             {
@@ -233,13 +259,16 @@ namespace Car_Model
             }
         }
 
-        public string ReserveCar(Guid IdCode)
+        public string ReserveCar()
         {
+            Console.WriteLine("Enter Id code of car to reserve: ");
+            Guid IdCode = Guid.Parse(Console.ReadLine());
+
             var result = allCars.Where(x => x.Id == IdCode).SingleOrDefault();
 
             if (result == null)
             {
-                throw new ArgumentNullException("There is no such Id of car in the system!");
+                return "There is no such Id of car in the system!";
             }
 
             var reservedResult = reservedCarData.Where(x => x.BookedCar.Id == IdCode).SingleOrDefault();
@@ -256,20 +285,23 @@ namespace Car_Model
             return "Reservation process has ended.";
         }
 
-        public string CancelReservation(Guid IdCode)
+        public string CancelReservation()
         {
+            Console.WriteLine("Enter Id code of car to cancel reservation: ");
+            Guid IdCode = Guid.Parse(Console.ReadLine());
+
             var result = allCars.Where(x => x.Id == IdCode).SingleOrDefault();
 
             if (result == null)
             {
-                throw new ArgumentNullException("There is no such Id of car in the system!");
+                return "There is no such Id of car in the system!";
             }
 
             var reservedResult = reservedCarData.Where(x => x.BookedCar.Id == IdCode).SingleOrDefault();
 
             if (reservedResult == null)
             {
-                throw new ArgumentNullException($"The car with id {IdCode} is not the reservation list.");
+                return $"The car with id {IdCode} is not the reservation list.";
             }
             else
             {
@@ -277,6 +309,32 @@ namespace Car_Model
             }
 
             return "Car has been removed from the reservation list.";
+        }
+
+        public void ListAllCars()
+        {
+            foreach (var car in allCars)
+            {
+                Console.WriteLine("Id: " + car.Id);
+                Console.WriteLine("Car Type: " + car.CarType);
+                Console.WriteLine("Seats: " + car.Seats);
+                Console.WriteLine("Brand: " + car.Brand);
+                Console.WriteLine("Model: " + car.Model);
+                Console.WriteLine("Doors: " + car.Doors);
+                Console.WriteLine("Gear Box: " + car.GearBoxType);
+                Console.WriteLine("Extras: " + car.Extras);
+            }
+        }
+
+        public void ListAllReservations()
+        {
+            foreach (var reservation in reservedCarData)
+            {
+                Console.WriteLine("Booked Car Id: " + reservation.BookedCar.Id);
+                //Console.WriteLine("Start Date: " + reservation.StartDate);
+                //Console.WriteLine("Client Additional Information: " + reservation.ClientAdditionalInformation);
+                //Console.WriteLine("Brand: " + reservation.RentalInfo);
+            }
         }
 
     }
