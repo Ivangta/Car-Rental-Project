@@ -8,10 +8,10 @@ namespace Car_Model
     {
         public Bookings() 
         {
-            this.StartDate = startDate;
-            this.ClientAdditionalInformation = clientRequestInfo;
-            this.BookedCar = carToBook;
-            this.RentalInfo = rentalInformation;
+            //this.StartDate = startDate;
+            //this.ClientAdditionalInformation = clientRequestInfo;
+            //this.BookedCar = carToBook;
+            //this.RentalInfo = rentalInformation;
         }
         
         public DateTime StartDate { get; set; }
@@ -31,13 +31,15 @@ namespace Car_Model
 
         public void SetBookedCar(Guid id)
         {
-            this.BookedCar.Id = id;
+            //this.BookedCar.Id = id;
+            this.BookedCar = new Car(id);
         }
 
         public void SetRentalInfo(int period, decimal price)
         {
-            this.RentalInfo.Period = period;
-            this.RentalInfo.Price = price;
+            this.RentalInfo = new RentalInfo(period, price);
+            //this.RentalInfo.Period = period;
+            //this.RentalInfo.Price = price;
         }
 
 

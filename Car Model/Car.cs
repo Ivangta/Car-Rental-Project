@@ -16,6 +16,11 @@ namespace Car_Model
             
         }
 
+        public Car(Guid id)
+        {
+            this.Id = id;
+        }
+
         public Car(string name)
             
         {
@@ -50,9 +55,7 @@ namespace Car_Model
         }
         public void SetEngineSpec(float capacity, int horsePower, FuelTypeEnum fuelType)
         {
-            this.EngineSpec.Capacity = capacity;
-            this.EngineSpec.HorsePower = horsePower;
-            this.EngineSpec.FuelType = fuelType;
+            this.EngineSpec = new EngineSpec(capacity, horsePower, fuelType);
         }
         public void SetExtras(Extras extras)
         {

@@ -80,7 +80,6 @@ namespace Car_Model
                     }
                     break;
             }
-           
         }
 
         private void AddCar()
@@ -181,7 +180,7 @@ namespace Car_Model
 
             if (result == null)
             {
-                throw new ArgumentNullException("There is no such Id of car in the system!");
+                return "There is no such Id of car in the system!";
             }
             else
             {
@@ -193,7 +192,7 @@ namespace Car_Model
                 {
                     case "Id":
                         {
-                            throw new ArgumentException("Id cannot be modified");
+                            return "Id cannot be modified";
                         }
                     case "CarType":
                         {
@@ -221,7 +220,7 @@ namespace Car_Model
                         break;
                     case "Gear":
                         {
-                            Console.Write("Enter number of doors: ");
+                            Console.Write("Enter gear: ");
                             var gear = (GearBoxEnum)Enum.Parse(typeof(GearBoxEnum), Console.ReadLine());
 
                             result.GearBoxType = gear;
@@ -229,7 +228,7 @@ namespace Car_Model
                         break;
                     default:
                         {
-                            throw new ArgumentException($"Parameter {parameterToModify} has not been recognized.");
+                            return $"Parameter {parameterToModify} has not been recognized.";
                         }
                 }
             }
@@ -352,6 +351,9 @@ namespace Car_Model
                 Console.WriteLine("Model: " + car.Model);
                 Console.WriteLine("Doors: " + car.Doors);
                 Console.WriteLine("Gear Box: " + car.GearBoxType);
+                Console.WriteLine("Capacity: " + car.EngineSpec.Capacity);
+                Console.WriteLine("Horsepower: " + car.EngineSpec.HorsePower);
+                Console.WriteLine("Fuel Type: " + car.EngineSpec.FuelType);
                 Console.WriteLine("Extras: " + car.Extras);
             }
         }
