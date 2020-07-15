@@ -20,8 +20,8 @@ namespace Car_Model
             this.FuelType = fuelType;
         }
         
-        public float Capacity { get; }
-        public int HorsePower { get; }
-        public FuelTypeEnum FuelType { get; }
+        public float Capacity { get; set; }
+        public int HorsePower { get; set; }
+        public FuelTypeEnum FuelType { get; set; }
     }
 }
