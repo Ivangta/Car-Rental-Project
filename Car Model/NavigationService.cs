@@ -259,6 +259,35 @@ namespace Car_Model
             }
         }
 
+        public void AddReservation(Guid IdCode)
+        {
+            var t = new Bookings();
+            string[] command = new string[3];
+
+            string id = IdCode.ToString();
+            command[0] = id;
+            var commandBookedCarId = Guid.Parse(command[0]);
+            t.SetBookedCar(commandBookedCarId);
+
+            Console.WriteLine("Enter start date: ");
+            command[1] = Console.ReadLine();
+            var commandDate = DateTime.Parse(command[1]);
+            t.SetDate(commandDate);
+
+            Console.WriteLine("Enter client information: ");
+            command[2] = Console.ReadLine();
+            var commandClientInformation = command[1];
+            t.SetClientInformation(commandClientInformation);
+
+            Console.WriteLine("Enter Rental Period and Price: ");
+            string enter = Console.ReadLine();
+            var rentalCommand = enter.Split(" ");
+            var period = int.Parse(rentalCommand[0]);
+            var price = decimal.Parse(rentalCommand[1]);
+            t.SetRentalInfo(period, price);
+
+            reservedCarData.Add(t);
+        }
         public string ReserveCar()
         {
             Console.WriteLine("Enter Id code of car to reserve: ");
@@ -275,11 +304,12 @@ namespace Car_Model
 
             if (reservedResult == null)
             {
-                reservedCarData.Add(reservedResult);
+                AddReservation(IdCode);
+                //reservedCarData.Add(reservedResult);
             }
             else
             {
-                throw new ArgumentException("Car has already been reserved.");
+                return "Car has already been reserved.";
             }
 
             return "Reservation process has ended.";
@@ -331,9 +361,9 @@ namespace Car_Model
             foreach (var reservation in reservedCarData)
             {
                 Console.WriteLine("Booked Car Id: " + reservation.BookedCar.Id);
-                //Console.WriteLine("Start Date: " + reservation.StartDate);
-                //Console.WriteLine("Client Additional Information: " + reservation.ClientAdditionalInformation);
-                //Console.WriteLine("Brand: " + reservation.RentalInfo);
+                Console.WriteLine("Start Date: " + reservation.StartDate);
+                Console.WriteLine("Client Additional Information: " + reservation.ClientAdditionalInformation);
+                Console.WriteLine("Brand: " + reservation.RentalInfo);
             }
         }
 

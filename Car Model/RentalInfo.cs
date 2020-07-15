@@ -12,7 +12,7 @@ namespace Car_Model
             this.Price = price;
         }
 
-        public int Period { get; }
-        public decimal Price { get; }
+        public int Period { get; set; }
+        public decimal Price { get; set; }
     }
 }

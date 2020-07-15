@@ -6,7 +6,7 @@ namespace Car_Model
 {
     public class Bookings
     {
-        public Bookings(DateTime startDate, string clientRequestInfo, Car carToBook, RentalInfo rentalInformation) 
+        public Bookings() 
         {
             this.StartDate = startDate;
             this.ClientAdditionalInformation = clientRequestInfo;
@@ -19,9 +19,29 @@ namespace Car_Model
         public Car BookedCar { get; set; }
         public RentalInfo RentalInfo { get; set; }
 
-        
+        public void SetDate(DateTime startDate)
+        {
+            this.StartDate = startDate;
+        }
 
-        
-        
+        public void SetClientInformation(string clientAdditionalInformation)
+        {
+            this.ClientAdditionalInformation = clientAdditionalInformation;
+        }
+
+        public void SetBookedCar(Guid id)
+        {
+            this.BookedCar.Id = id;
+        }
+
+        public void SetRentalInfo(int period, decimal price)
+        {
+            this.RentalInfo.Period = period;
+            this.RentalInfo.Price = price;
+        }
+
+
+
+
     }
 }
