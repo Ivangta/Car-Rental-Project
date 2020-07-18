@@ -115,17 +115,27 @@ namespace Car_Model
 
         private string AddCar()
         {
+            int numberOfParameters = 8;
+
             var k = new Car();
-            string[] command = new string[8];
+            string[] command = new string[numberOfParameters];
 
             Console.Write("Enter car ID: ");
             command[0] = Console.ReadLine();
-            var commandId = Guid.Parse(command[0]);
-            k.SetId(commandId);
+            Guid id;
+            var isId = Guid.TryParse(command[0], out id);
+            if (isId)
+            {
+                k.SetId(id);
+            }
+            else
+            {
+                return "Not a valid id!";
+            }
 
             foreach (var car in allCars)
              {
-                 if (car.Id == commandId)
+                 if (car.Id == id)
                  {
                      return "Id is already present, adding of car terminated!";
                  }
@@ -174,7 +184,7 @@ namespace Car_Model
 
             allCars.Add(k);
 
-            return $"New car with id {commandId} created.";
+            return $"New car with id {id} created.";
         }
 
         private string RemoveCar()
