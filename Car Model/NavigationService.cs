@@ -329,7 +329,7 @@ namespace Car_Model
             }
         }
 
-        private void AddReservation(Guid IdCode)
+        private string AddReservation(Guid IdCode)
         {
             var t = new Bookings();
             string[] command = new string[3];
@@ -357,6 +357,8 @@ namespace Car_Model
             t.SetRentalInfo(period, price);
 
             reservedCarData.Add(t);
+
+            return "Car has been added to reservation list.";
         }
         private string ReserveCar()
         {
