@@ -25,7 +25,7 @@ namespace Car_Model
         public DoorsEnum Doors { get; set; }
         public GearBoxEnum GearBoxType { get; set; }
         public EngineSpec EngineSpec { get; set; }
-        public Extras Extras { get; set; }
+        public Extra Extras { get; set; }
 
         public void SetId(Guid id)
         {
@@ -56,9 +56,9 @@ namespace Car_Model
         {
             this.EngineSpec = new EngineSpec(capacity, horsePower, fuelType);
         }
-        public void SetExtras(Extras extras)
+        public void SetExtras(List<string> extras)
         {
-            this.Extras = extras;
+            this.Extras = new Extra(extras);
         }
 
     }

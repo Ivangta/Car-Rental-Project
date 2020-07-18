@@ -33,9 +33,7 @@ namespace Car_Model
             switch (command[0])
             {
                 case "addCar":
-                    {
-                        Console.WriteLine(AddCar());
-                    }
+                        AddCar();
                     break;
                 case "removeCar":
                     {
@@ -113,33 +111,45 @@ namespace Car_Model
             Console.WriteLine("\nexit");
         }
 
-        private string AddCar()
+        private void AddCar()
         {
-            int numberOfParameters = 8;
+            int numberOfParametersWithoutExtras = 7;
+            int maxNumberOfParameters = 10;
 
             var k = new Car();
-            string[] command = new string[numberOfParameters];
+            string[] command = new string[maxNumberOfParameters];
 
-            Console.Write("Enter car ID: ");
-            command[0] = Console.ReadLine();
             Guid id;
-            var isId = Guid.TryParse(command[0], out id);
-            if (isId)
+            bool checkId = false;
+
+            while (!checkId)
             {
-                k.SetId(id);
-            }
-            else
-            {
-                return "Not a valid id!";
+                Console.Write("Enter car ID: ");
+                command[0] = Console.ReadLine();
+                checkId = Guid.TryParse(command[0], out id);
+                if (checkId)
+                {
+                    k.SetId(id);
+
+                    foreach (var car in allCars)
+                    {
+                        if (car.Id == id)
+                        {
+                            Console.WriteLine("Id is already present in the list");
+                            continue;
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect id parameter!");
+                    continue;
+                }
             }
 
-            foreach (var car in allCars)
-             {
-                 if (car.Id == id)
-                 {
-                     return "Id is already present, adding of car terminated!";
-                 }
-             }
+            id = Guid.Parse(command[0]);
+
+
 
             Console.Write("Enter car type: ");
             command[1] = Console.ReadLine();
@@ -177,14 +187,44 @@ namespace Car_Model
             var fuelType = (FuelTypeEnum)Enum.Parse(typeof(FuelTypeEnum), (engineCommand[2]));
             k.SetEngineSpec(capacity, horsePower, fuelType);
 
-            Console.Write("Enter extra: ");
-            command[7] = Console.ReadLine();
-            var commandExtras = (Extras)Enum.Parse(typeof(Extras), (command[7]));
-            k.SetExtras(commandExtras);
+            Console.Write("Enter number of extras: ");
+
+            int numberOfExtras = int.Parse(Console.ReadLine());
+
+            while (numberOfExtras < 1 || numberOfExtras > 3)
+            {
+                Console.Write("Number of extras must be between 1 and 3!");
+                numberOfExtras = int.Parse(Console.ReadLine());
+            }
+
+            List<string> extras = new List<string>();
+            
+            for (int i = numberOfParametersWithoutExtras; i < numberOfParametersWithoutExtras + numberOfExtras; i++)
+            {
+                bool checkExtra = false;
+                while (!checkExtra)
+                {
+                    Console.Write("Enter extra: ");
+                    command[i] = Console.ReadLine();
+                    var extraEntry = command[i];
+                    if (extraEntry == "USB" || extraEntry == "SunRoof" || extraEntry == "HeatedSeat")
+                    {
+                        checkExtra = true;
+                        extras.Add(command[i]);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Incorrect extra!");
+                        continue;
+                    }
+                }
+                
+                k.SetExtras(extras);
+            }
 
             allCars.Add(k);
 
-            return $"New car with id {id} created.";
+            Console.WriteLine($"New car with id {id} created.");
         }
 
         private string RemoveCar()
@@ -468,7 +508,12 @@ namespace Car_Model
                 Console.WriteLine("Capacity: " + car.EngineSpec.Capacity);
                 Console.WriteLine("Horsepower: " + car.EngineSpec.HorsePower);
                 Console.WriteLine("Fuel Type: " + car.EngineSpec.FuelType);
-                Console.WriteLine("Extras: " + car.Extras);
+
+                foreach (var extra in car.Extras.Extras)
+                {
+                    Console.Write("Extra: ");
+                    Console.WriteLine(extra);
+                }
                 Console.WriteLine();
             }
         }
