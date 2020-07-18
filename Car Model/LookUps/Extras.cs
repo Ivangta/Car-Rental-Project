@@ -9,6 +9,5 @@ namespace Car_Model
         USB,
         HeatedSeats,
         SunRoof,
-
     }
 }

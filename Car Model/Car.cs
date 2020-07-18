@@ -7,26 +7,25 @@ namespace Car_Model
 {
     public class Car 
     {
-        private string name;
-        private List<Car> cars;
-        private List<Car> reservedCars;
-
         public Car()
         {
-            
+
         }
 
         public Car(Guid id)
         {
             this.Id = id;
         }
-
-        public Car(string name)
-            
-        {
-            this.name = Name;
-            this.cars = new List<Car>();
-        }
+       
+        public Guid Id { get; set; }
+        public CarType CarType { get; set; }
+        public int Seats { get; set; }
+        public string Brand { get; set;  }
+        public string Model { get; set; }
+        public DoorsEnum Doors { get; set; }
+        public GearBoxEnum GearBoxType { get; set; }
+        public EngineSpec EngineSpec { get; set; }
+        public Extras Extras { get; set; }
 
         public void SetId(Guid id)
         {
@@ -62,37 +61,6 @@ namespace Car_Model
             this.Extras = extras;
         }
 
-
-
-        public Guid Id { get; set; }
-        public CarType CarType { get; set; }
-        public int Seats { get; set; }
-        public string Brand { get; set;  }
-        public string Model { get; set; }
-        public DoorsEnum Doors { get; set; }
-        public GearBoxEnum GearBoxType { get; set; }
-        public EngineSpec EngineSpec { get; set; }
-        public Extras Extras { get; set; }
-
-        //private static List<Car> listOfCars = new List<Car>();
-
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
-        public List<Car> Cars
-        {
-            get { return cars; }
-            set { cars = value; }
-        }
-        
-
-        
-
-        
-
-        
 
     }
 }
