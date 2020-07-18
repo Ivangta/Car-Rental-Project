@@ -113,11 +113,10 @@ namespace Car_Model
 
         private void AddCar()
         {
-            int numberOfParametersWithoutExtras = 7;
-            int maxNumberOfParameters = 10;
+            int numberOfParameters = 10;
+            string[] command = new string[numberOfParameters];
 
             var k = new Car();
-            string[] command = new string[maxNumberOfParameters];
 
             Guid id;
             bool checkId = false;
@@ -148,8 +147,6 @@ namespace Car_Model
             }
 
             id = Guid.Parse(command[0]);
-
-
 
             Console.Write("Enter car type: ");
             command[1] = Console.ReadLine();
@@ -186,9 +183,9 @@ namespace Car_Model
             var horsePower = int.Parse(engineCommand[1]);
             var fuelType = (FuelTypeEnum)Enum.Parse(typeof(FuelTypeEnum), (engineCommand[2]));
             k.SetEngineSpec(capacity, horsePower, fuelType);
+            
 
             Console.Write("Enter number of extras: ");
-
             int numberOfExtras = int.Parse(Console.ReadLine());
 
             while (numberOfExtras < 1 || numberOfExtras > 3)
@@ -199,7 +196,7 @@ namespace Car_Model
 
             List<string> extras = new List<string>();
             
-            for (int i = numberOfParametersWithoutExtras; i < numberOfParametersWithoutExtras + numberOfExtras; i++)
+            for (int i = 0; i < numberOfExtras; i++)
             {
                 bool checkExtra = false;
                 while (!checkExtra)
@@ -526,7 +523,8 @@ namespace Car_Model
                 Console.WriteLine("Start Date: " + reservation.StartDate);
                 Console.WriteLine("Client Additional Information: " + reservation.ClientAdditionalInformation);
                 Console.WriteLine("Period in days: " + reservation.RentalInfo.Period);
-                Console.WriteLine("Price: " + reservation.RentalInfo.Price);
+                Console.WriteLine("Price per day: " + reservation.RentalInfo.PricePerDay);
+                Console.WriteLine("Total price: " + reservation.RentalInfo.TotalPrice);
                 Console.WriteLine();
             }
         }
