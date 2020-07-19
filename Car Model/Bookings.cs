@@ -26,9 +26,9 @@ namespace Car_Model
             this.BookedCar = new Car(id);
         }
 
-        public void SetRentalInfo(int period, decimal price)
+        public void SetRentalInfo(int period, decimal pricePerDay, decimal totalPrice)
         {
-            this.RentalInfo = new RentalInfo(period, price);
+            this.RentalInfo = new RentalInfo(period, pricePerDay, totalPrice);
         }
 
 

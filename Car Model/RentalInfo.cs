@@ -6,7 +6,7 @@ namespace Car_Model
 {
     public class RentalInfo
     {
-        public RentalInfo(int period, decimal pricePerDay)
+        public RentalInfo(int period, decimal pricePerDay, decimal totalPrice)
         {
             this.Period = period;
             this.PricePerDay = pricePerDay;
@@ -15,6 +15,6 @@ namespace Car_Model
 
         public int Period { get; set; }
         public decimal PricePerDay { get; set; }
-        public decimal TotalPrice { get; set; }
+        public decimal TotalPrice { get; }
     }
 }

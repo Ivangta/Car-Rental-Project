@@ -126,6 +126,7 @@ namespace Car_Model
                 Console.Write("Enter car ID: ");
                 command[0] = Console.ReadLine();
                 checkId = Guid.TryParse(command[0], out id);
+
                 if (checkId)
                 {
                     k.SetId(id);
@@ -396,17 +397,46 @@ namespace Car_Model
             var commandClientInformation = command[2];
             t.SetClientInformation(commandClientInformation);
 
-            Console.Write("Enter rental period in days and total rental price for the period: ");
+            Console.Write("Enter rental period in days: ");
             string enter = Console.ReadLine();
             var rentalCommand = enter.Split(" ");
             var period = int.Parse(rentalCommand[0]);
-            var price = decimal.Parse(rentalCommand[1]);
-            t.SetRentalInfo(period, price);
+            var pricePerDay = 0;
+
+            pricePerDay = CalculationOfTotalPrice(period, pricePerDay);
+
+            var totalPrice = 0;
+
+            t.SetRentalInfo(period, pricePerDay, totalPrice);
 
             reservedCarData.Add(t);
 
             return "Car has been added to reservation list.";
         }
+
+        private int CalculationOfTotalPrice(int period, int pricePerDay)
+        {
+
+            if (period < 3)
+            {
+                pricePerDay = 100;
+            }
+            else if (period >= 3 && period <= 10)
+            {
+                pricePerDay = 80;
+            }
+            else if (period > 10 || period <= 20)
+            {
+                pricePerDay = 60;
+            }
+            else if (period > 20)
+            {
+                pricePerDay = 50;
+            }
+
+            return pricePerDay;
+        }
+
         private string ReserveCar()
         {
             Console.Write("Enter Id code of car to reserve: ");
