@@ -123,6 +123,7 @@ namespace Car_Model
 
             while (!checkId)
             {
+                Console.WriteLine("-------------------");
                 Console.Write("Enter car ID: ");
                 command[0] = Console.ReadLine();
                 checkId = Guid.TryParse(command[0], out id);
@@ -130,7 +131,7 @@ namespace Car_Model
                 if (checkId)
                 {
                     k.SetId(id);
-
+                    Console.WriteLine("-------------------");
                     foreach (var car in allCars)
                     {
                         if (car.Id == id)
@@ -142,58 +143,159 @@ namespace Car_Model
                 }
                 else
                 {
-                    Console.WriteLine("Incorrect id parameter!");
+                    Console.WriteLine("Incorrect parameter!");
                     continue;
                 }
             }
 
             id = Guid.Parse(command[0]);
 
-            Console.Write("Enter car type: ");
-            command[1] = Console.ReadLine();
-            var commandCarType = (CarType)Enum.Parse(typeof(CarType), (command[1]));
-            k.SetCarType(commandCarType); 
+            CarType carType;
+            bool checkCarType = false;
 
-            Console.Write("Enter number of seats: ");
-            command[2] = Console.ReadLine();
-            var commandSeats = int.Parse(command[2]);
-            k.SetSeats(commandSeats);
+            while (!checkCarType)
+            {
+                Console.Write("Enter car type from options: ");
+                Console.WriteLine("\n" + "1.Sedan" + "\n" + "2.Combi" + "\n" + "3.Hatchback" + "\n" + "4.SUV");
+                Console.WriteLine("-------------------");
+                command[1] = Console.ReadLine();
+                checkCarType = Enum.TryParse(command[1], out carType);
+
+                if (checkCarType)
+                {
+                    k.SetCarType(carType);
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect parameter!");
+                    continue;
+                }
+            }
+
+            int seats;
+            bool checkSeats = false;
+
+            while (!checkSeats)
+            {
+                Console.WriteLine("-------------------");
+                Console.Write("Enter number of seats: ");
+                command[2] = Console.ReadLine();
+                checkSeats = int.TryParse(command[2], out seats);
+
+                if (checkSeats)
+                {
+                    k.SetSeats(seats);
+                    Console.WriteLine("-------------------");
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect parameter!");
+                    continue;
+                }
+            }
 
             Console.Write("Enter brand: ");
             var commandBrand = command[3];
             commandBrand = Console.ReadLine();
+            Console.WriteLine("-------------------");
             Console.Write("Enter model: ");
             var commandModel = command[4];
             commandModel = Console.ReadLine();
             k.SetBrand(commandBrand, commandModel);
+            Console.WriteLine("-------------------");
 
-            Console.Write("Enter number of doors: ");
-            command[5] = Console.ReadLine();
-            var commandDoors = (DoorsEnum)Enum.Parse(typeof(DoorsEnum), (command[5]));
-            k.SetDoors(commandDoors);
 
-            Console.Write("Enter gearbox type: ");
-            command[6] = Console.ReadLine();
-            var commandGearBox = (GearBoxEnum)Enum.Parse(typeof(GearBoxEnum), (command[6]));
-            k.SetGearBoxType(commandGearBox);
 
-            Console.Write("Enter car engine capacity, horsepower and fuel type: ");
-            string enter = Console.ReadLine();
-            var engineCommand = enter.Split(" ");
-            var capacity = float.Parse(engineCommand[0]);
-            var horsePower = int.Parse(engineCommand[1]);
-            var fuelType = (FuelTypeEnum)Enum.Parse(typeof(FuelTypeEnum), (engineCommand[2]));
-            k.SetEngineSpec(capacity, horsePower, fuelType);
-            
+            DoorsEnum numberOfDoors;
+            bool checkDoors = false;
+
+            while (!checkDoors)
+            {
+                Console.Write("Enter number of doors from options: ");
+                Console.WriteLine("\n" + "1.Two" + "\n" + "2.Four");
+                Console.WriteLine("-------------------");
+                command[5] = Console.ReadLine();
+                checkDoors = Enum.TryParse(command[5], out numberOfDoors);
+
+                if (checkDoors)
+                {
+                    k.SetDoors(numberOfDoors);
+                    Console.WriteLine("-------------------");
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect parameter!");
+                    continue;
+                }
+            }
+
+
+            GearBoxEnum gearBoxType;
+            bool checkGearBox = false;
+
+            while (!checkGearBox)
+            {
+                Console.Write("Enter gearbox type from options: ");
+                Console.WriteLine("\n" + "1.Manual" + "\n" + "2.Automatic" + "\n" + "3.Combined");
+                Console.WriteLine("-------------------");
+                command[6] = Console.ReadLine();
+                checkGearBox = Enum.TryParse(command[6], out gearBoxType);
+
+                if (checkGearBox)
+                {
+                    k.SetGearBoxType(gearBoxType);
+                    Console.WriteLine("-------------------");
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect parameter!");
+                    continue;
+                }
+            }
+
+           
+
+
+            float capacity;
+            int horsePower;
+            FuelTypeEnum fuelType;
+            bool checkCapacity = false;
+            bool checkHorsePower = false;
+            bool checkFuelType = false;
+
+            while (!checkCapacity || !checkHorsePower || !checkFuelType)
+            {
+                Console.Write("Enter car engine capacity, horsepower and fuel type: ");
+                Console.WriteLine("\n" + "Fuel type options:" + "\n" + "1.Petrol" + "\n" + "2.LPG" + "\n" + "3.Diesel" + "\n" + "4.Electric");
+                Console.WriteLine("-------------------");
+                string enter = Console.ReadLine();
+                var engineCommand = enter.Split(" ");
+                checkCapacity = float.TryParse(engineCommand[0], out capacity);
+                checkHorsePower = int.TryParse(engineCommand[1], out horsePower);
+                checkFuelType = Enum.TryParse(engineCommand[2], out fuelType);
+
+                if (checkCapacity && checkHorsePower && checkFuelType)
+                {
+                    k.SetEngineSpec(capacity, horsePower, fuelType);
+                    Console.WriteLine("-------------------");
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect parameter!");
+                    continue;
+                }
+            }
 
             Console.Write("Enter number of extras: ");
             int numberOfExtras = int.Parse(Console.ReadLine());
 
             while (numberOfExtras < 1 || numberOfExtras > 3)
             {
-                Console.Write("Number of extras must be between 1 and 3!");
+                Console.WriteLine("Number of extras must be between 1 and 3!");
+                Console.Write("Enter number of extras: ");
                 numberOfExtras = int.Parse(Console.ReadLine());
             }
+            Console.WriteLine("-------------------");
 
             List<string> extras = new List<string>();
             
@@ -202,13 +304,16 @@ namespace Car_Model
                 bool checkExtra = false;
                 while (!checkExtra)
                 {
-                    Console.Write("Enter extra: ");
+                    Console.Write("Enter extra from options: ");
+                    Console.WriteLine("\n" + "1.USB" + "\n" + "2.SunRoof" + "\n" + "3.HeatedSeat");
+                    Console.WriteLine("-------------------");
                     command[i] = Console.ReadLine();
                     var extraEntry = command[i];
                     if (extraEntry == "USB" || extraEntry == "SunRoof" || extraEntry == "HeatedSeat")
                     {
                         checkExtra = true;
                         extras.Add(command[i]);
+                        Console.WriteLine("-------------------");
                     }
                     else
                     {

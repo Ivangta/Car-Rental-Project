@@ -9,7 +9,6 @@ namespace Car_Model
         Petrol, 
         LPG,
         Diesel,
-        LPGOrPetrol,
         Electric
     }
 }
