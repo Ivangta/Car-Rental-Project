@@ -52,8 +52,7 @@ namespace Car_Model
                     break;
                 case "removeAllCars":
                     {
-                        
-                        Console.WriteLine(RemoveAllCars());
+                        RemoveAllCars();
                     }
                     break;
                 case "reserveCar":
@@ -357,7 +356,7 @@ namespace Car_Model
             }
         }
 
-        private string RemoveAllCars()
+        private void RemoveAllCars()
         {
             Console.Write("Enter parameter to remove all cars by: ");
 
@@ -367,32 +366,72 @@ namespace Car_Model
             {
                 case "carType":
                     {
-                        Console.Write("Enter car type to remove: ");
-                        CarType carType = (CarType)Enum.Parse(typeof(CarType), Console.ReadLine());
+                        CarType carType;
+                        bool checkCarType = false;
 
-                        allCars.RemoveAll(x => x.CarType == carType);
-                        return "Cars removed from brand " + carType;
+                        while (!checkCarType)
+                        {
+                            Console.Write("Enter car type from options: ");
+                            Console.WriteLine("\n" + "1.Sedan" + "\n" + "2.Combi" + "\n" + "3.Hatchback" + "\n" + "4.SUV");
+                            Console.WriteLine("-------------------");
+                            string carTypeEntry = Console.ReadLine();
+                            checkCarType = Enum.TryParse(carTypeEntry, out carType);
+
+                            if (checkCarType)
+                            {
+                                allCars.RemoveAll(x => x.CarType == carType);
+                                Console.WriteLine("All cars under car type " + carType + " are removed.");
+                                Console.WriteLine("-------------------");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Incorrect parameter!");
+                                continue;
+                            }
+                        }
                     }
+                    break;
                 case "brand":
                     {
                         Console.Write("Enter brand to remove: ");
                         var brand = Console.ReadLine();
 
-                        allCars.RemoveAll(x => x.Brand == brand);
-                        return "Cars removed from brand " + brand;
+                        bool brandExists = allCars.Exists(item => item.Brand == brand);
+
+                        if (brandExists)
+                        {
+                            allCars.RemoveAll(x => x.Brand == brand);
+                            Console.WriteLine("Cars removed from brand " + brand);
+                        }
+                        else
+                        {
+                            Console.WriteLine("There is no such brand!");
+                        }
                     }
+                    break;
                 case "model":
                     {
                         Console.Write("Enter model to remove: ");
                         var model = Console.ReadLine();
 
-                        allCars.RemoveAll(x => x.Model == model);
-                        return "Cars removed from model " + model;
+                        bool modelExists = allCars.Exists(item => item.Model == model);
+
+                        if (modelExists)
+                        {
+                            allCars.RemoveAll(x => x.Model == model);
+                            Console.WriteLine("Cars removed from brand " + model);
+                        }
+                        else
+                        {
+                            Console.WriteLine("There is no such model!");
+                        }
                     }
+                    break;
                 default:
                     {
-                        return $"Parameter {parameterToRemove} has not been recognized.";
+                        Console.WriteLine($"Parameter {parameterToRemove} has not been recognized.");
                     }
+                    break;
             }
         }
 
@@ -602,14 +641,6 @@ namespace Car_Model
 
             switch (parameterToRemove)
             {
-                case "period":
-                    {
-                        Console.Write("Enter period to remove by: ");
-                        var period = int.Parse(Console.ReadLine());
-
-                        reservedCarData.RemoveAll(x => x.RentalInfo.Period == period);
-                        return "Reservations removed for period: " + period;
-                    }
                 case "startDate":
                     {
                         Console.Write("Enter start date to remove by: ");
@@ -618,7 +649,6 @@ namespace Car_Model
                         reservedCarData.RemoveAll(x => x.StartDate == startDate);
                         return "Reservations removed for start date: " + startDate;
                     }
-                
                 default:
                     {
                         return $"Parameter {parameterToRemove} has not been recognized.";
