@@ -85,6 +85,11 @@ namespace Car_Model
                         ListCommands();
                     }
                     break;
+                case "priceList":
+                    {
+                        PriceList();
+                    }
+                    break;
                 case "exit":
                     {
                     }
@@ -107,7 +112,16 @@ namespace Car_Model
             Console.WriteLine("removeAllReservations");
             Console.WriteLine("listAllCars");
             Console.WriteLine("listAllReservations");
+            Console.WriteLine("priceList");
             Console.WriteLine("\nexit");
+        }
+
+        private void PriceList()
+        {
+            Console.WriteLine("For period under 3 days, price per day is 100.");
+            Console.WriteLine("For period between 3 and 10 days, price per day is 80.");
+            Console.WriteLine("For period between 11 and 20 days, price per day is 60.");
+            Console.WriteLine("For period over 20 days, price per day is 60.");
         }
 
         private void AddCar()
@@ -725,7 +739,6 @@ namespace Car_Model
 
         private int CalculationOfTotalPrice(int period, int pricePerDay)
         {
-
             if (period < 3)
             {
                 pricePerDay = 100;
