@@ -47,7 +47,7 @@ namespace Car_Model
                     break;
                 case "searchCar":
                     {
-                        Console.WriteLine(SearchCar());
+                        SearchCar();
                     }
                     break;
                 case "removeAllCars":
@@ -612,26 +612,43 @@ namespace Car_Model
             }
         }
 
-        private string SearchCar()
+        private void SearchCar()
         {
-            Console.Write("Enter car Id to be searched: ");
-            Guid Id = Guid.Parse(Console.ReadLine());
-            bool isCarFound = false;
+            Guid id;
+            string idEntry;
+            bool checkId = false;
 
-            foreach (Car car in allCars)
+            while (!checkId)
             {
-                if (car.Id.Equals(Id))
+                Console.WriteLine("-------------------");
+                Console.Write("Enter car ID: ");
+                idEntry = Console.ReadLine();
+                checkId = Guid.TryParse(idEntry, out id);
+                bool isCarFound = false;
+
+                if (checkId)
                 {
-                    isCarFound = true;
+                    foreach (Car car in allCars)
+                    {
+                        if (car.Id.Equals(id))
+                        {
+                            isCarFound = true;
+                        }
+                    }
+                    if (isCarFound)
+                    {
+                        Console.WriteLine("Car found and present in list.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Car not found.");
+                    }
                 }
-            }
-            if (isCarFound)
-            {
-                return "Car found and present in list.";
-            }
-            else
-            {
-                return "Car not found.";
+                else
+                {
+                    Console.WriteLine("Incorrect parameter!");
+                    continue;
+                }
             }
         }
 
