@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Car_Model
 {
     public class NavigationService
     {
         private List<Bookings> reservedCarData;
-        private List<Car> allCars; 
+        private List<Car> allCarsData; 
 
         public void StartProgram()
         {
@@ -16,7 +15,7 @@ namespace Car_Model
             Console.WriteLine("Input a command: (type \"commands\" to list all commands)");
 
             reservedCarData = new List<Bookings>();
-            allCars = new List<Car>();
+            allCarsData = new List<Car>();
             string line = Console.ReadLine();
             while (line != "exit")
             {
@@ -129,9 +128,9 @@ namespace Car_Model
             int numberOfParameters = 10;
             string[] command = new string[numberOfParameters];
 
-            var k = new Car();
+            var listOfCarElements = new Car();
 
-            Guid id;
+            Guid idCode;
             bool checkId = false;
 
             while (!checkId)
@@ -139,15 +138,15 @@ namespace Car_Model
                 Console.WriteLine("-------------------");
                 Console.Write("Enter car ID: ");
                 command[0] = Console.ReadLine();
-                checkId = Guid.TryParse(command[0], out id);
+                checkId = Guid.TryParse(command[0], out idCode);
 
                 if (checkId)
                 {
-                    k.SetId(id);
+                    listOfCarElements.SetId(idCode);
                     Console.WriteLine("-------------------");
-                    foreach (var car in allCars)
+                    foreach (var car in allCarsData)
                     {
-                        if (car.Id == id)
+                        if (car.Id == idCode)
                         {
                             Console.WriteLine("Id is already present in the list");
                             continue;
@@ -161,7 +160,7 @@ namespace Car_Model
                 }
             }
 
-            id = Guid.Parse(command[0]);
+            idCode = Guid.Parse(command[0]);
 
             CarType carType;
             bool checkCarType = false;
@@ -176,7 +175,7 @@ namespace Car_Model
 
                 if (checkCarType)
                 {
-                    k.SetCarType(carType);
+                    listOfCarElements.SetCarType(carType);
                 }
                 else
                 {
@@ -197,7 +196,7 @@ namespace Car_Model
 
                 if (checkSeats)
                 {
-                    k.SetSeats(seats);
+                    listOfCarElements.SetSeats(seats);
                     Console.WriteLine("-------------------");
                 }
                 else
@@ -214,10 +213,8 @@ namespace Car_Model
             Console.Write("Enter model: ");
             var commandModel = command[4];
             commandModel = Console.ReadLine();
-            k.SetBrand(commandBrand, commandModel);
+            listOfCarElements.SetBrand(commandBrand, commandModel);
             Console.WriteLine("-------------------");
-
-
 
             DoorsEnum numberOfDoors;
             bool checkDoors = false;
@@ -232,7 +229,7 @@ namespace Car_Model
 
                 if (checkDoors)
                 {
-                    k.SetDoors(numberOfDoors);
+                    listOfCarElements.SetDoors(numberOfDoors);
                     Console.WriteLine("-------------------");
                 }
                 else
@@ -241,7 +238,6 @@ namespace Car_Model
                     continue;
                 }
             }
-
 
             GearBoxEnum gearBoxType;
             bool checkGearBox = false;
@@ -256,7 +252,7 @@ namespace Car_Model
 
                 if (checkGearBox)
                 {
-                    k.SetGearBoxType(gearBoxType);
+                    listOfCarElements.SetGearBoxType(gearBoxType);
                     Console.WriteLine("-------------------");
                 }
                 else
@@ -286,7 +282,7 @@ namespace Car_Model
 
                 if (checkCapacity && checkHorsePower && checkFuelType)
                 {
-                    k.SetEngineSpec(capacity, horsePower, fuelType);
+                    listOfCarElements.SetEngineSpec(capacity, horsePower, fuelType);
                     Console.WriteLine("-------------------");
                 }
                 else
@@ -332,12 +328,12 @@ namespace Car_Model
                     }
                 }
                 
-                k.SetExtras(extras);
+                listOfCarElements.SetExtras(extras);
             }
 
-            allCars.Add(k);
+            allCarsData.Add(listOfCarElements);
 
-            Console.WriteLine($"New car with id {id} created.");
+            Console.WriteLine($"New car with id {idCode} created.");
         }
 
         private void RemoveCar()
@@ -356,7 +352,7 @@ namespace Car_Model
                 if (checkId)
                 {
                     Car toDelete = null;
-                    var result = allCars.Where(x => x.Id == idCode).SingleOrDefault();
+                    var result = allCarsData.Where(x => x.Id == idCode).SingleOrDefault();
 
                     if (result == null)
                     {
@@ -364,9 +360,9 @@ namespace Car_Model
                     }
                     else
                     {
-                        if (allCars.Count != 0)
+                        if (allCarsData.Count != 0)
                         {
-                            foreach (var car in allCars)
+                            foreach (var car in allCarsData)
                             {
                                 if (car.Id == idCode)
                                 {
@@ -377,7 +373,7 @@ namespace Car_Model
                                     Console.WriteLine("No such car present!");
                                 }
                             }
-                            allCars.Remove(toDelete);
+                            allCarsData.Remove(toDelete);
                             Console.WriteLine("Car " + idCode + " has been removed.");
                         }
                         else
@@ -416,9 +412,18 @@ namespace Car_Model
 
                             if (checkCarType)
                             {
-                                allCars.RemoveAll(x => x.CarType == carType);
-                                Console.WriteLine("All cars under car type " + carType + " are removed.");
-                                Console.WriteLine("-------------------");
+                                bool carTypeExists = allCarsData.Exists(item => item.CarType == carType); //ss
+
+                                if (carTypeExists)
+                                {
+                                    allCarsData.RemoveAll(x => x.CarType == carType);
+                                    Console.WriteLine("All cars under car type " + carType + " are removed.");
+                                    Console.WriteLine("-------------------");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("There is no such car type!");
+                                }
                             }
                             else
                             {
@@ -433,11 +438,11 @@ namespace Car_Model
                         Console.Write("Enter brand to remove: ");
                         var brand = Console.ReadLine();
 
-                        bool brandExists = allCars.Exists(item => item.Brand == brand);
+                        bool brandExists = allCarsData.Exists(item => item.Brand == brand);
 
                         if (brandExists)
                         {
-                            allCars.RemoveAll(x => x.Brand == brand);
+                            allCarsData.RemoveAll(x => x.Brand == brand);
                             Console.WriteLine("Cars removed from brand " + brand);
                         }
                         else
@@ -451,11 +456,11 @@ namespace Car_Model
                         Console.Write("Enter model to remove: ");
                         var model = Console.ReadLine();
 
-                        bool modelExists = allCars.Exists(item => item.Model == model);
+                        bool modelExists = allCarsData.Exists(item => item.Model == model);
 
                         if (modelExists)
                         {
-                            allCars.RemoveAll(x => x.Model == model);
+                            allCarsData.RemoveAll(x => x.Model == model);
                             Console.WriteLine("Cars removed from brand " + model);
                         }
                         else
@@ -487,7 +492,7 @@ namespace Car_Model
 
                 if (checkId)
                 {
-                    var result = allCars.Where(x => x.Id == idCode).SingleOrDefault();
+                    var result = allCarsData.Where(x => x.Id == idCode).SingleOrDefault();
 
                     if (result == null)
                     {
@@ -628,7 +633,7 @@ namespace Car_Model
 
         private void SearchCar()
         {
-            Guid id;
+            Guid idCode;
             string idEntry;
             bool checkId = false;
 
@@ -637,14 +642,14 @@ namespace Car_Model
                 Console.WriteLine("-------------------");
                 Console.Write("Enter car ID: ");
                 idEntry = Console.ReadLine();
-                checkId = Guid.TryParse(idEntry, out id);
+                checkId = Guid.TryParse(idEntry, out idCode);
                 bool isCarFound = false;
 
                 if (checkId)
                 {
-                    foreach (Car car in allCars)
+                    foreach (Car car in allCarsData)
                     {
-                        if (car.Id.Equals(id))
+                        if (car.Id.Equals(idCode))
                         {
                             isCarFound = true;
                         }
@@ -668,13 +673,13 @@ namespace Car_Model
 
         private void AddReservation(Guid IdCode)
         {
-            var t = new Bookings();
+            var listOfReservationElements = new Bookings();
             string[] command = new string[4];
 
-            string id = IdCode.ToString();
-            command[0] = id;
+            string idCode = IdCode.ToString();
+            command[0] = idCode;
             var commandBookedCarId = Guid.Parse(command[0]);
-            t.SetBookedCar(commandBookedCarId);
+            listOfReservationElements.SetBookedCar(commandBookedCarId);
 
 
             DateTime startDate;
@@ -689,7 +694,7 @@ namespace Car_Model
 
                 if (checkDate)
                 {
-                    t.SetDate(startDate);
+                    listOfReservationElements.SetDate(startDate);
                     Console.WriteLine("-------------------");
                 }
                 else
@@ -702,7 +707,7 @@ namespace Car_Model
             Console.Write("Enter client information: ");
             command[2] = Console.ReadLine();
             var commandClientInformation = command[2];
-            t.SetClientInformation(commandClientInformation);
+            listOfReservationElements.SetClientInformation(commandClientInformation);
             Console.WriteLine("-------------------");
 
             int period;
@@ -721,7 +726,7 @@ namespace Car_Model
                     pricePerDay = CalculationOfTotalPrice(period, pricePerDay);
 
                     var totalPrice = 0;
-                    t.SetRentalInfo(period, pricePerDay, totalPrice);
+                    listOfReservationElements.SetRentalInfo(period, pricePerDay, totalPrice);
                     Console.WriteLine($"Period is {period}, price per day is {pricePerDay} and total price totals {period * pricePerDay}.");
                     Console.WriteLine("-------------------");
                 }
@@ -732,7 +737,7 @@ namespace Car_Model
                 }
             }
 
-            reservedCarData.Add(t);
+            reservedCarData.Add(listOfReservationElements);
 
             Console.WriteLine("Car has been added to reservation list.");
         }
@@ -761,7 +766,7 @@ namespace Car_Model
 
         private void ReserveCar()
         {
-            Guid id;
+            Guid idCode;
             string idEntry;
             bool checkId = false;
 
@@ -770,11 +775,11 @@ namespace Car_Model
                 Console.WriteLine("-------------------");
                 Console.Write("Enter car ID: ");
                 idEntry = Console.ReadLine();
-                checkId = Guid.TryParse(idEntry, out id);
+                checkId = Guid.TryParse(idEntry, out idCode);
 
                 if (checkId)
                 {
-                    var result = allCars.Where(x => x.Id == id).SingleOrDefault();
+                    var result = allCarsData.Where(x => x.Id == idCode).SingleOrDefault();
 
                     if (result == null)
                     {
@@ -782,11 +787,11 @@ namespace Car_Model
                         continue;
                     }
 
-                    var reservedResult = reservedCarData.Where(x => x.BookedCar.Id == id).SingleOrDefault();
+                    var reservedResult = reservedCarData.Where(x => x.BookedCar.Id == idCode).SingleOrDefault();
 
                     if (reservedResult == null)
                     {
-                        AddReservation(id);
+                        AddReservation(idCode);
                         Console.WriteLine("Reservation process has ended.");
                     }
                     else
@@ -804,7 +809,7 @@ namespace Car_Model
 
         private void CancelReservation()
         {
-            Guid id;
+            Guid idCode;
             string idEntry;
             bool checkId = false;
 
@@ -813,11 +818,11 @@ namespace Car_Model
                 Console.WriteLine("-------------------");
                 Console.Write("Enter car ID: ");
                 idEntry = Console.ReadLine();
-                checkId = Guid.TryParse(idEntry, out id);
+                checkId = Guid.TryParse(idEntry, out idCode);
 
                 if (checkId)
                 {
-                    var reservedResult = reservedCarData.Where(x => x.BookedCar.Id == id).SingleOrDefault();
+                    var reservedResult = reservedCarData.Where(x => x.BookedCar.Id == idCode).SingleOrDefault();
 
                     if (reservedResult == null)
                     {
@@ -873,7 +878,7 @@ namespace Car_Model
 
         private void ListAllCars()
         {
-            foreach (var car in allCars)
+            foreach (var car in allCarsData)
             {
                 Console.WriteLine("Id: " + car.Id);
                 Console.WriteLine("Car Type: " + car.CarType);
