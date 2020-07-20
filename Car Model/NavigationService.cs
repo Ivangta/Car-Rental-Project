@@ -37,7 +37,7 @@ namespace Car_Model
                     break;
                 case "removeCar":
                     {
-                        Console.WriteLine(RemoveCar());
+                        RemoveCar();
                     }
                     break;
                 case "modifyCar":
@@ -67,7 +67,7 @@ namespace Car_Model
                     break;
                 case "removeAllReservations":
                     {
-                        Console.WriteLine(RemoveAllReservations());
+                        RemoveAllReservations();
                     }
                     break;
                 case "listAllCars":
@@ -252,9 +252,6 @@ namespace Car_Model
                 }
             }
 
-           
-
-
             float capacity;
             int horsePower;
             FuelTypeEnum fuelType;
@@ -329,37 +326,63 @@ namespace Car_Model
             Console.WriteLine($"New car with id {id} created.");
         }
 
-        private string RemoveCar()
+        private void RemoveCar()
         {
-            Car toDelete = null;
-            Console.Write("Enter Id code of car to remove: ");
-            Guid Id = Guid.Parse(Console.ReadLine());
-            if (allCars.Count != 0)
+            Guid idCode;
+            string idEntry;
+            bool checkId = false;
+
+            while (!checkId)
             {
-                foreach (var car in allCars)
+                Console.WriteLine("-------------------");
+                Console.Write("Enter car ID: ");
+                idEntry = Console.ReadLine();
+                checkId = Guid.TryParse(idEntry, out idCode);
+
+                if (checkId)
                 {
-                    if (car.Id == Id)
+                    Car toDelete = null;
+                    var result = allCars.Where(x => x.Id == idCode).SingleOrDefault();
+
+                    if (result == null)
                     {
-                        toDelete = car;
+                        Console.WriteLine("There is no such Id of car in the system!");
                     }
                     else
                     {
-                        Console.WriteLine("No such car present!");
+                        if (allCars.Count != 0)
+                        {
+                            foreach (var car in allCars)
+                            {
+                                if (car.Id == idCode)
+                                {
+                                    toDelete = car;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("No such car present!");
+                                }
+                            }
+                            allCars.Remove(toDelete);
+                            Console.WriteLine("Car " + idCode + " has been removed.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("No cars present in list!");
+                        }
                     }
                 }
-                allCars.Remove(toDelete);
-                return "Car " + Id + " has been removed.";
-            }
-            else
-            {
-                return "No cars present in list!";
+                else
+                {
+                    Console.WriteLine("Incorrect parameter!");
+                    continue;
+                }
             }
         }
 
         private void RemoveAllCars()
         {
             Console.Write("Enter parameter to remove all cars by: ");
-
             string parameterToRemove = Console.ReadLine();
 
             switch (parameterToRemove)
@@ -435,67 +458,158 @@ namespace Car_Model
             }
         }
 
-        private string ModifyCar()
+        private void ModifyCar()
         {
-            Console.Write("Enter Id code: ");
-            Guid IdCode = Guid.Parse(Console.ReadLine());
-            var result = allCars.Where(x => x.Id == IdCode).SingleOrDefault();
+            Guid idCode;
+            string idEntry;
+            bool checkId = false;
 
-            if (result == null)
+            while (!checkId)
             {
-                return "There is no such Id of car in the system!";
-            }
-            else
-            {
-                Console.Write("Enter parameter to modify: ");
+                Console.WriteLine("-------------------");
+                Console.Write("Enter car ID: ");
+                idEntry = Console.ReadLine();
+                checkId = Guid.TryParse(idEntry, out idCode);
 
-                string parameterToModify = Console.ReadLine();
-
-                switch (parameterToModify)
+                if (checkId)
                 {
-                    case "id":
-                        {
-                            return "Id cannot be modified";
-                        }
-                    case "carType":
-                        {
-                            Console.Write("Enter car type: ");
-                            CarType carType = (CarType)Enum.Parse(typeof(CarType), Console.ReadLine());
+                    var result = allCars.Where(x => x.Id == idCode).SingleOrDefault();
 
-                            result.CarType = carType;
-                        }
-                        break;
-                    case "seats":
-                        {
-                            Console.Write("Enter number of seats: ");
-                            var seats = int.Parse(Console.ReadLine());
+                    if (result == null)
+                    {
+                        Console.WriteLine("There is no such Id of car in the system!");
+                    }
+                    else
+                    {
+                        Console.Write("Enter parameter to modify: ");
 
-                            result.Seats = seats;
-                        }
-                        break;
-                    case "doors":
-                        {
-                            Console.Write("Enter number of doors: ");
-                            var doors = (DoorsEnum)Enum.Parse(typeof(DoorsEnum), Console.ReadLine());
+                        string parameterToModify = Console.ReadLine();
 
-                            result.Doors = doors;
-                        }
-                        break;
-                    case "gear":
+                        switch (parameterToModify)
                         {
-                            Console.Write("Enter gear: ");
-                            var gear = (GearBoxEnum)Enum.Parse(typeof(GearBoxEnum), Console.ReadLine());
+                            case "id":
+                                {
+                                    Console.WriteLine("Id cannot be modified");
+                                }
+                                break;
+                            case "carType":
+                                {
+                                    CarType carType;
+                                    bool checkCarType = false;
 
-                            result.GearBoxType = gear;
+                                    while (!checkCarType)
+                                    {
+                                        Console.Write("Enter car type from options: ");
+                                        Console.WriteLine("\n" + "1.Sedan" + "\n" + "2.Combi" + "\n" + "3.Hatchback" + "\n" + "4.SUV");
+                                        Console.WriteLine("-------------------");
+                                        string carTypeEntry = Console.ReadLine();
+                                        checkCarType = Enum.TryParse(carTypeEntry, out carType);
+
+                                        if (checkCarType)
+                                        {
+                                            result.CarType = carType;
+                                            Console.WriteLine("Parameter modified.");
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Incorrect parameter!");
+                                            continue;
+                                        }
+                                    }
+                                }
+                                break;
+                            case "seats":
+                                {
+                                    int seats;
+                                    string seatsEntry;
+                                    bool checkSeats = false;
+
+                                    while (!checkSeats)
+                                    {
+                                        Console.WriteLine("-------------------");
+                                        Console.Write("Enter number of seats: ");
+                                        seatsEntry = Console.ReadLine();
+                                        checkSeats = int.TryParse(seatsEntry, out seats);
+
+                                        if (checkSeats)
+                                        {
+                                            result.Seats = seats;
+                                            Console.WriteLine("Parameter modified.");
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Incorrect parameter!");
+                                            continue;
+                                        }
+                                    }
+                                }
+                                break;
+                            case "doors":
+                                {
+                                    DoorsEnum doorsEnum;
+                                    bool checkDoors = false;
+
+                                    while (!checkDoors)
+                                    {
+                                        Console.Write("Enter doors from options: ");
+                                        Console.WriteLine("\n" + "1.Two" + "\n" + "2.Four");
+                                        Console.WriteLine("-------------------");
+                                        string doorsEntry = Console.ReadLine();
+                                        checkDoors = Enum.TryParse(doorsEntry, out doorsEnum);
+
+                                        if (checkDoors)
+                                        {
+                                            result.Doors = doorsEnum;
+                                            Console.WriteLine("Parameter modified.");
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Incorrect parameter!");
+                                            continue;
+                                        }
+                                    }
+                                }
+                                break;
+                            case "gear":
+                                {
+                                    GearBoxEnum gearBoxEnum;
+                                    bool checkGearBox = false;
+
+                                    while (!checkGearBox)
+                                    {
+                                        Console.Write("Enter gearbox from options: ");
+                                        Console.WriteLine("\n" + "1.Manual" + "\n" + "2.Automatic" + "\n" + "3.Combined");
+                                        Console.WriteLine("-------------------");
+                                        string gearBoxEntry = Console.ReadLine();
+                                        checkGearBox = Enum.TryParse(gearBoxEntry, out gearBoxEnum);
+
+                                        if (checkGearBox)
+                                        {
+                                            result.GearBoxType = gearBoxEnum;
+                                            Console.WriteLine("Parameter modified.");
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Incorrect parameter!");
+                                            continue;
+                                        }
+                                    }
+                                }
+                                break;
+                            default:
+                                {
+                                    Console.WriteLine($"Parameter {parameterToModify} has not been recognized.");
+                                }
+                                break;
                         }
-                        break;
-                    default:
-                        {
-                            return $"Parameter {parameterToModify} has not been recognized.";
-                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect parameter!");
+                    continue;
                 }
             }
-            return "Car has been modified.";
         }
 
         private string SearchCar()
@@ -633,7 +747,7 @@ namespace Car_Model
             return "Car has been removed from the reservation list.";
         }
 
-        private string RemoveAllReservations()
+        private void RemoveAllReservations()
         {
             Console.Write("Enter parameter to remove all reservations by: ");
 
@@ -646,13 +760,24 @@ namespace Car_Model
                         Console.Write("Enter start date to remove by: ");
                         DateTime startDate = DateTime.Parse(Console.ReadLine());
 
-                        reservedCarData.RemoveAll(x => x.StartDate == startDate);
-                        return "Reservations removed for start date: " + startDate;
+                        bool dateExists = reservedCarData.Exists(item => item.StartDate == startDate);
+
+                        if (dateExists)
+                        {
+                            reservedCarData.RemoveAll(x => x.StartDate == startDate);
+                            Console.WriteLine("Reservations removed for start date: " + startDate);
+                        }
+                        else
+                        {
+                            Console.WriteLine("There is no such start date present!");
+                        }
                     }
+                    break;
                 default:
                     {
-                        return $"Parameter {parameterToRemove} has not been recognized.";
+                        Console.WriteLine($"Parameter {parameterToRemove} has not been recognized.");
                     }
+                    break;
             }
         }
 
