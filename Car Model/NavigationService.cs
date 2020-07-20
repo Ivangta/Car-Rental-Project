@@ -57,12 +57,12 @@ namespace Car_Model
                     break;
                 case "reserveCar":
                     {
-                        Console.WriteLine(ReserveCar());
+                        ReserveCar();
                     }
                     break;
                 case "cancelReservation":
                     {
-                        Console.WriteLine(CancelReservation());
+                        CancelReservation();
                     }
                     break;
                 case "removeAllReservations":
@@ -652,41 +652,75 @@ namespace Car_Model
             }
         }
 
-        private string AddReservation(Guid IdCode)
+        private void AddReservation(Guid IdCode)
         {
             var t = new Bookings();
-            string[] command = new string[3];
+            string[] command = new string[4];
 
             string id = IdCode.ToString();
             command[0] = id;
             var commandBookedCarId = Guid.Parse(command[0]);
             t.SetBookedCar(commandBookedCarId);
 
-            Console.Write("Enter start date: ");
-            command[1] = Console.ReadLine();
-            var commandDate = DateTime.Parse(command[1]);
-            t.SetDate(commandDate);
 
+            DateTime startDate;
+            bool checkDate = false;
+
+            while (!checkDate)
+            {
+                Console.WriteLine("-------------------");
+                Console.Write("Enter date: ");
+                command[1] = Console.ReadLine();
+                checkDate = DateTime.TryParse(command[1], out startDate);
+
+                if (checkDate)
+                {
+                    t.SetDate(startDate);
+                    Console.WriteLine("-------------------");
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect parameter!");
+                    continue;
+                }
+            }
+            
             Console.Write("Enter client information: ");
             command[2] = Console.ReadLine();
             var commandClientInformation = command[2];
             t.SetClientInformation(commandClientInformation);
+            Console.WriteLine("-------------------");
 
-            Console.Write("Enter rental period in days: ");
-            string enter = Console.ReadLine();
-            var rentalCommand = enter.Split(" ");
-            var period = int.Parse(rentalCommand[0]);
-            var pricePerDay = 0;
+            int period;
+            bool checkPeriod = false;
 
-            pricePerDay = CalculationOfTotalPrice(period, pricePerDay);
+            while (!checkPeriod)
+            {
+                Console.Write("Enter period: ");
+                command[3] = Console.ReadLine();
+                checkPeriod = int.TryParse(command[3], out period);
 
-            var totalPrice = 0;
+                if (checkPeriod)
+                {
+                    var pricePerDay = 0;
 
-            t.SetRentalInfo(period, pricePerDay, totalPrice);
+                    pricePerDay = CalculationOfTotalPrice(period, pricePerDay);
+
+                    var totalPrice = 0;
+                    t.SetRentalInfo(period, pricePerDay, totalPrice);
+                    Console.WriteLine($"Period is {period}, price per day is {pricePerDay} and total price totals {period * pricePerDay}.");
+                    Console.WriteLine("-------------------");
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect parameter!");
+                    continue;
+                }
+            }
 
             reservedCarData.Add(t);
 
-            return "Car has been added to reservation list.";
+            Console.WriteLine("Car has been added to reservation list.");
         }
 
         private int CalculationOfTotalPrice(int period, int pricePerDay)
@@ -712,56 +746,82 @@ namespace Car_Model
             return pricePerDay;
         }
 
-        private string ReserveCar()
+        private void ReserveCar()
         {
-            Console.Write("Enter Id code of car to reserve: ");
-            Guid IdCode = Guid.Parse(Console.ReadLine());
+            Guid id;
+            string idEntry;
+            bool checkId = false;
 
-            var result = allCars.Where(x => x.Id == IdCode).SingleOrDefault();
-
-            if (result == null)
+            while (!checkId)
             {
-                return "There is no such Id of car in the system!";
-            }
+                Console.WriteLine("-------------------");
+                Console.Write("Enter car ID: ");
+                idEntry = Console.ReadLine();
+                checkId = Guid.TryParse(idEntry, out id);
 
-            var reservedResult = reservedCarData.Where(x => x.BookedCar.Id == IdCode).SingleOrDefault();
+                if (checkId)
+                {
+                    var result = allCars.Where(x => x.Id == id).SingleOrDefault();
 
-            if (reservedResult == null)
-            {
-                AddReservation(IdCode);
-            }
-            else
-            {
-                return "Car has already been reserved.";
-            }
+                    if (result == null)
+                    {
+                        Console.WriteLine("There is no such Id of car in the system!");
+                        continue;
+                    }
 
-            return "Reservation process has ended.";
+                    var reservedResult = reservedCarData.Where(x => x.BookedCar.Id == id).SingleOrDefault();
+
+                    if (reservedResult == null)
+                    {
+                        AddReservation(id);
+                        Console.WriteLine("Reservation process has ended.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Car has already been reserved.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect parameter!");
+                    continue;
+                }
+            }
         }
 
-        private string CancelReservation()
+        private void CancelReservation()
         {
-            Console.Write("Enter Id code of car to cancel reservation: ");
-            Guid IdCode = Guid.Parse(Console.ReadLine());
+            Guid id;
+            string idEntry;
+            bool checkId = false;
 
-            var result = allCars.Where(x => x.Id == IdCode).SingleOrDefault();
-
-            if (result == null)
+            while (!checkId)
             {
-                return "There is no such Id of car in the system!";
-            }
+                Console.WriteLine("-------------------");
+                Console.Write("Enter car ID: ");
+                idEntry = Console.ReadLine();
+                checkId = Guid.TryParse(idEntry, out id);
 
-            var reservedResult = reservedCarData.Where(x => x.BookedCar.Id == IdCode).SingleOrDefault();
+                if (checkId)
+                {
+                    var reservedResult = reservedCarData.Where(x => x.BookedCar.Id == id).SingleOrDefault();
 
-            if (reservedResult == null)
-            {
-                return $"The car with id {IdCode} is not the reservation list.";
+                    if (reservedResult == null)
+                    {
+                        Console.WriteLine("There is no such Id of car in the system!");
+                    }
+                    else
+                    {
+                        reservedCarData.Remove(reservedResult);
+                        Console.WriteLine("Car has been removed from the reservation list.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect parameter!");
+                    continue;
+                }
             }
-            else
-            {
-                reservedCarData.Remove(reservedResult);
-            }
-
-            return "Car has been removed from the reservation list.";
         }
 
         private void RemoveAllReservations()
