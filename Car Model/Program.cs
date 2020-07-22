@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace Car_Model
 {
     class Program

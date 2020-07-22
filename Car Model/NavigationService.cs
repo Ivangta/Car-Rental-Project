@@ -7,7 +7,35 @@ namespace Car_Model
     public class NavigationService
     {
         private List<Bookings> reservedCarData;
-        private List<Car> allCarsData; 
+        private List<Car> allCarsData;
+
+        public void Start()
+        {
+
+            Console.WriteLine("Input a command: ");
+
+            reservedCarData = new List<Bookings>();
+            allCarsData = new List<Car>();
+            string line = Console.ReadLine();
+            while (line != "exit")
+            {
+                CommandExecution(line);
+
+                line = Console.ReadLine();
+            }
+        }
+
+
+        void CommandExecution( string line)
+        {
+            string[] command = line.Split(" ");
+            switch (command[0])
+            {
+                case "addCar":
+                        AddCar();
+                    break;
+            }
+        }
 
         public void StartProgram()
         {

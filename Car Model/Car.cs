@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Linq;
 
 namespace Car_Model
 {
@@ -9,7 +7,6 @@ namespace Car_Model
     {
         public Car()
         {
-
         }
 
         public Car(Guid id)
