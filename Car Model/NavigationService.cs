@@ -168,18 +168,18 @@ namespace Car_Model
                 command[0] = Console.ReadLine();
                 checkId = Guid.TryParse(command[0], out idCode);
 
+                foreach (var car in allCarsData)
+                {
+                    if (car.Id == idCode)
+                    {
+                        throw new Exception("Id is already present in the list.");
+                    }
+                }
+
                 if (checkId)
                 {
                     listOfCarElements.SetId(idCode);
                     Console.WriteLine("-------------------");
-                    foreach (var car in allCarsData)
-                    {
-                        if (car.Id == idCode)
-                        {
-                            Console.WriteLine("Id is already present in the list");
-                            continue;
-                        }
-                    }
                 }
                 else
                 {
@@ -380,7 +380,9 @@ namespace Car_Model
                 if (checkId)
                 {
                     Car toDelete = null;
+                    Bookings toDeleteBooking = null;
                     var result = allCarsData.Where(x => x.Id == idCode).SingleOrDefault();
+                    var reservedResult = reservedCarData.Where(x => x.BookedCar.Id == idCode).SingleOrDefault();
 
                     if (result == null)
                     {
@@ -402,6 +404,15 @@ namespace Car_Model
                                 }
                             }
                             allCarsData.Remove(toDelete);
+
+                            if (reservedResult != null)
+                            {
+                                foreach (var reservation in reservedCarData)
+                                {
+                                    toDeleteBooking = reservation;
+                                }
+                                reservedCarData.Remove(toDeleteBooking);
+                            }
                             Console.WriteLine("Car " + idCode + " has been removed.");
                         }
                         else
@@ -440,13 +451,31 @@ namespace Car_Model
 
                             if (checkCarType)
                             {
-                                bool carTypeExists = allCarsData.Exists(item => item.CarType == carType); //ss
+                                bool carTypeExists = allCarsData.Exists(item => item.CarType == carType);
+                                var carIdExists = allCarsData.Where(item => item.CarType == carType);
 
                                 if (carTypeExists)
                                 {
+                                    Guid idCode;
+                                    foreach (var car in allCarsData.Where(item => item.CarType == carType))
+                                    {
+                                        idCode = car.Id;
+                                        Bookings toDeleteBooking = null;
+                                        var reservedResult = reservedCarData.Where(id => id.BookedCar.Id == idCode);
+
+                                        if (reservedResult != null)
+                                        {
+                                            foreach (var reservation in reservedCarData)
+                                            {
+                                                toDeleteBooking = reservation;
+                                            }
+                                            reservedCarData.Remove(toDeleteBooking);
+                                        }
+                                    }
                                     allCarsData.RemoveAll(x => x.CarType == carType);
                                     Console.WriteLine("All cars under car type " + carType + " are removed.");
                                     Console.WriteLine("-------------------");
+
                                 }
                                 else
                                 {
