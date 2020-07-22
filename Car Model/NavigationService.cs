@@ -167,19 +167,31 @@ namespace Car_Model
                 Console.Write("Enter car ID: ");
                 command[0] = Console.ReadLine();
                 checkId = Guid.TryParse(command[0], out idCode);
-
-                foreach (var car in allCarsData)
-                {
-                    if (car.Id == idCode)
-                    {
-                        throw new Exception("Id is already present in the list.");
-                    }
-                }
-
+                
                 if (checkId)
                 {
-                    listOfCarElements.SetId(idCode);
-                    Console.WriteLine("-------------------");
+                    if (allCarsData.Count == 0)
+                    {
+                        listOfCarElements.SetId(idCode);
+                        Console.WriteLine("-------------------");
+                    }
+                    else
+                    {
+                        foreach (var car in allCarsData)
+                        {
+                            if (car.Id == idCode)
+                            {
+                                Console.WriteLine("Id already exists in the list!");
+                                checkId = false;
+                                break;
+                            }
+                            else
+                            {
+                                listOfCarElements.SetId(idCode);
+                                Console.WriteLine("-------------------");
+                            }
+                        }
+                    }
                 }
                 else
                 {
@@ -187,6 +199,7 @@ namespace Car_Model
                     continue;
                 }
             }
+
 
             idCode = Guid.Parse(command[0]);
 
