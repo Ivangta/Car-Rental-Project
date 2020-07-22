@@ -452,12 +452,12 @@ namespace Car_Model
                             if (checkCarType)
                             {
                                 bool carTypeExists = allCarsData.Exists(item => item.CarType == carType);
-                                var carIdExists = allCarsData.Where(item => item.CarType == carType);
 
                                 if (carTypeExists)
                                 {
                                     Guid idCode;
-                                    foreach (var car in allCarsData.Where(item => item.CarType == carType))
+                                    var carIdExists = allCarsData.Where(item => item.CarType == carType);
+                                    foreach (var car in carIdExists)
                                     {
                                         idCode = car.Id;
                                         Bookings toDeleteBooking = null;
@@ -499,6 +499,23 @@ namespace Car_Model
 
                         if (brandExists)
                         {
+                            Guid idCode;
+                            var carIdExists = allCarsData.Where(item => item.Brand == brand);
+                            foreach (var car in carIdExists)
+                            {
+                                idCode = car.Id;
+                                Bookings toDeleteBooking = null;
+                                var reservedResult = reservedCarData.Where(id => id.BookedCar.Id == idCode);
+
+                                if (reservedResult != null)
+                                {
+                                    foreach (var reservation in reservedCarData)
+                                    {
+                                        toDeleteBooking = reservation;
+                                    }
+                                    reservedCarData.Remove(toDeleteBooking);
+                                }
+                            }
                             allCarsData.RemoveAll(x => x.Brand == brand);
                             Console.WriteLine("Cars removed from brand " + brand);
                         }
@@ -517,6 +534,23 @@ namespace Car_Model
 
                         if (modelExists)
                         {
+                            Guid idCode;
+                            var carIdExists = allCarsData.Where(item => item.Model == model);
+                            foreach (var car in carIdExists)
+                            {
+                                idCode = car.Id;
+                                Bookings toDeleteBooking = null;
+                                var reservedResult = reservedCarData.Where(id => id.BookedCar.Id == idCode);
+
+                                if (reservedResult != null)
+                                {
+                                    foreach (var reservation in reservedCarData)
+                                    {
+                                        toDeleteBooking = reservation;
+                                    }
+                                    reservedCarData.Remove(toDeleteBooking);
+                                }
+                            }
                             allCarsData.RemoveAll(x => x.Model == model);
                             Console.WriteLine("Cars removed from brand " + model);
                         }
